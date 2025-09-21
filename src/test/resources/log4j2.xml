@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- status="WARN": Specifies the level of Log4j's internal logging -->
+<Configuration status="WARN">
+    <!-- Appenders: Define where the logs will be written -->
+    <Appenders>
+        <!-- Console Appender: Writes logs to the console -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <!-- Log pattern explanation:
+                     %d{HH:mm:ss.SSS} = Hour:Minute:Second.Millisecond
+                     %-5level = Log level (fixed width of 5 characters)
+                     [%t] = Thread name
+                     %logger{36} = Logger name (max 36 characters)
+                     %msg = Log message
+                     %n = New line
+                -->
+                <Pattern>
+                    %d{HH:mm:ss.SSS} |
+                    %highlight{%-5level}{FATAL=red bold, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=blue bold, TRACE=black} |
+                    [%t] |
+                    %logger{36} |
+                    %style{%msg}{white} %n
+                </Pattern>
+            </PatternLayout>
+        </Console>
+
+        <!-- File Appender: Writes logs to a file -->
+        <RollingFile name="RollingFile"
+                     fileName="logs/test.log"
+                     filePattern="logs/test-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} | %-5level | [%t] | %logger{36} | %msg%n</Pattern>
+            </PatternLayout>
+            <!-- Creates a new file when the size reaches 10MB -->
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <!-- Keeps a maximum of 10 files -->
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+
+    <!-- Loggers: Define which log levels use which appenders -->
+    <Loggers>
+        <!-- Root Logger: Global settings for all logs -->
+        <Root level="warn">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
